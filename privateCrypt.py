@@ -16,6 +16,7 @@ def get_aes_key():
         logging.error("!!!!请配置config.py中PRIVATE_AES_KEY(AES的私钥)")
         raise ValueError
     private_key_b = sha256(private_key.encode()).digest()  # 使用SHA-256算法生成一个32字节的密钥
+    logging.error(private_key)
     return private_key_b
 
 
