@@ -61,8 +61,10 @@ def run():
     # 推送消息
     if '申购失败' in s_content:
         title="申购失败通知:"
+        process.send_msg(title, s_content)
     elif '申购中' in s_content:
         title="申购未结束:"
+        process.send_msg(title, s_content)
     else:
         title = "申购成功通知:"
         process.send_msg(title, s_content)
