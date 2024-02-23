@@ -10,6 +10,7 @@ on:
       - '.github/workflows/**'
   schedule:
     - cron: '20 0,1 * * *'
+    - cron: '0 19 * * *' # 每天19点触发
 
 env:
   TZ: Asia/Shanghai
@@ -21,7 +22,6 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-    #    runs-on: windows-latest
 
     steps:
       - uses: actions/checkout@v3
@@ -32,8 +32,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
-      #          pip install pycryptodome requests beautifulsoup4
+          pip install -r requirements.txt          
 
       - name: Cache pip
         uses: actions/cache@v3
@@ -41,7 +40,7 @@ jobs:
           path: ~/.cache/pip
           key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
           restore-keys: |
-            ${{ runner.os }}-pip-
+            ${{ runner.os }}-pip-            
 
       - name: start run
         env:
@@ -49,6 +48,35 @@ jobs:
           PRIVATE_AES_KEY: ${{ secrets.PRIVATE_AES_KEY }}
         run: |
           python main.py
+
+  nightly-run:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v3
+        with:
+          python-version: "3.10"
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt          
+
+      - name: Cache pip
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-            
+
+      - name: start nightly run
+        env:
+          PUSHPLUS_KEY: ${{ secrets.PUSHPLUS_KEY }}
+          PRIVATE_AES_KEY: ${{ secrets.PRIVATE_AES_KEY }}
+        run: |
+          python get_result.py
 
 #        pip install flake8 pytest
 #        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
