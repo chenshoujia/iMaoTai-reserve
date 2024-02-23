@@ -247,10 +247,16 @@ def send_msg(title, content):
     if config.PUSH_TOKEN is None:
         return
     url = 'http://www.pushplus.plus/send'
-    r = requests.get(url, params={'token': config.PUSH_TOKEN,
-                                  'title': title,
-                                  'content': content})
-    logging.info(f'通知推送结果：{r.status_code, r.text}')
+    data = {
+        'token': config.PUSH_TOKEN,
+        'title': title,
+        'content': content
+    }
+    try:
+        r = requests.post(url, json=data)
+        logging.info(f'通知推送结果：{r.status_code, r.text}')
+    except requests.exceptions.RequestException as e:
+        logging.error(f'Error sending message: {e}')
 
 
 # 核心代码，执行预约
