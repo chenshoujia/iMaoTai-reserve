@@ -47,7 +47,7 @@ jobs:
           PUSHPLUS_KEY: ${{ secrets.PUSHPLUS_KEY }}
           PRIVATE_AES_KEY: ${{ secrets.PRIVATE_AES_KEY }}
         run: |
-          python main.py
+          python get_result.py
 
   nightly-run:
     runs-on: ubuntu-latest
